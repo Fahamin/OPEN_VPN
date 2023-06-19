@@ -7,7 +7,6 @@ public class Server {
     private String ovpnUserName;
     private String ovpnUserPassword;
 
-
     public Server() {
     }
 

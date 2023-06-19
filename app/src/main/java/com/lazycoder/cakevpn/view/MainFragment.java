@@ -226,6 +226,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
             }
 
             br.readLine();
+
             OpenVpnApi.startVpn(getContext(), config, server.getCountry(), server.getOvpnUserName(), server.getOvpnUserPassword());
 
             // Update log
@@ -359,6 +360,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
      * VPN server country icon change
      * @param serverIcon: icon URL
      */
+
     public void updateCurrentServerIcon(String serverIcon) {
         Glide.with(getContext())
                 .load(serverIcon)

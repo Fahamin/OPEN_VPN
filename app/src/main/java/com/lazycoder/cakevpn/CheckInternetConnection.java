@@ -14,6 +14,7 @@ public class CheckInternetConnection {
      * @param context
      * @return: internet connection status
      */
+
     public boolean netCheck(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cm.getActiveNetworkInfo();
