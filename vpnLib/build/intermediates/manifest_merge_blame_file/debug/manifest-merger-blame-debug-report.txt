@@ -4,8 +4,8 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="24"
-6-->D:\Awsome Flutter\OPEN_VPN\vpnLib\src\main\AndroidManifest.xml
+6-->D:\Awsome Flutter\OPEN_VPN3\vpnLib\src\main\AndroidManifest.xml
 7        android:targetSdkVersion="33" />
-7-->D:\Awsome Flutter\OPEN_VPN\vpnLib\src\main\AndroidManifest.xml
+7-->D:\Awsome Flutter\OPEN_VPN3\vpnLib\src\main\AndroidManifest.xml
 8
 9</manifest>
