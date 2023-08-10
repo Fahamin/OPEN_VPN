@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.VpnService;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +33,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.util.Objects;
 
 
 import static android.app.Activity.RESULT_OK;
 
-import top.oneconnectapi.app.OpenVpnApi;
-import top.oneconnectapi.app.core.OpenVPNService;
-import top.oneconnectapi.app.core.OpenVPNThread;
-import top.oneconnectapi.app.core.VpnStatus;
+import de.blinkt.openvpn.OpenVpnApi;
+import de.blinkt.openvpn.core.OpenVPNService;
+import de.blinkt.openvpn.core.OpenVPNThread;
+import de.blinkt.openvpn.core.VpnStatus;
+
 
 public class MainFragment extends Fragment implements View.OnClickListener, ChangeServer {
 
@@ -100,7 +102,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
                 // Vpn is running, user would like to disconnect current connection.
                 if (vpnStart) {
                     confirmDisconnect();
-                }else {
+                } else {
                     prepareVpn();
                 }
         }
@@ -109,7 +111,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     /**
      * Show show disconnect confirm dialog
      */
-    public void confirmDisconnect(){
+    public void confirmDisconnect() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getActivity().getString(R.string.connection_close_confirm));
 
@@ -161,6 +163,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Stop vpn
+     *
      * @return boolean: VPN status
      */
     public boolean stopVpn() {
@@ -213,21 +216,21 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     private void startVpn() {
         try {
             // .ovpn file
-            InputStream conf = getActivity().getAssets().open(server.getOvpn());
+            InputStream conf = requireActivity().getAssets().open(server.getOvpn());
             InputStreamReader isr = new InputStreamReader(conf);
             BufferedReader br = new BufferedReader(isr);
-            String config = "";
+            StringBuilder config = new StringBuilder();
             String line;
 
             while (true) {
                 line = br.readLine();
                 if (line == null) break;
-                config += line + "\n";
+                config.append(line).append("\n");
             }
 
             br.readLine();
 
-            OpenVpnApi.startVpn(getContext(), config, server.getCountry(), server.getOvpnUserName(), server.getOvpnUserPassword());
+            OpenVpnApi.startVpn(getContext(), config.toString(), server.getCountry(), server.getOvpnUserName(), server.getOvpnUserPassword());
 
             // Update log
             binding.logTv.setText("Connecting...");
@@ -235,11 +238,13 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
         } catch (IOException | RemoteException e) {
             e.printStackTrace();
+            Log.e("fahamin", e.getMessage());
         }
     }
 
     /**
      * Status change with corresponding vpn connection status
+     *
      * @param connectionState
      */
     public void setStatus(String connectionState) {
@@ -274,6 +279,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Change button background color and text
+     *
      * @param status: VPN current status
      */
     public void status(String status) {
@@ -336,10 +342,11 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Update status UI
-     * @param duration: running time
+     *
+     * @param duration:          running time
      * @param lastPacketReceive: last packet receive time
-     * @param byteIn: incoming data
-     * @param byteOut: outgoing data
+     * @param byteIn:            incoming data
+     * @param byteOut:           outgoing data
      */
     public void updateConnectionStatus(String duration, String lastPacketReceive, String byteIn, String byteOut) {
         binding.durationTv.setText("Duration: " + duration);
@@ -350,6 +357,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Show toast message
+     *
      * @param message: toast message
      */
     public void showToast(String message) {
@@ -358,6 +366,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * VPN server country icon change
+     *
      * @param serverIcon: icon URL
      */
 
@@ -369,6 +378,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Change server when user select new server
+     *
      * @param server ovpn server details
      */
     @Override
